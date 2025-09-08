@@ -1,9 +1,25 @@
 import { Canvas } from "@react-three/fiber";
-import React from "react";
+import React, { useState } from "react";
 import MacCanvas from "./canvas/MacCanvas";
-import { motion } from "framer-motion";
+import IPhoneCanvas from "./canvas/IPhoneCanvas";
+import { motion, AnimatePresence } from "framer-motion";
 
-const navbarItems = ["Mac", "iPad", "Services", "iOS", "Products"];
+const products = {
+  Mac: {
+    canvas: <MacCanvas />,
+    title: "The Future of MacBook Pro",
+    subtitle:
+      "Power, speed, and elegance—redefined. Experience the ultimate laptop experience.",
+  },
+  iPhone: {
+    canvas: <IPhoneCanvas />,
+    title: "Meet the New iPhone",
+    subtitle:
+      "Revolutionary design, incredible camera, and unmatched performance in your hands.",
+  },
+};
+
+const navbarItems = ["Mac", "iPhone", "Pods", "Headphone"];
 
 const navVariants = {
   hidden: { y: -50, opacity: 0 },
@@ -20,8 +36,11 @@ const itemVariants = {
 };
 
 const App = () => {
+  const [selected, setSelected] = useState("Mac");
+
   return (
     <div className="w-screen h-screen bg-black text-white relative overflow-hidden">
+      {/* Navbar */}
       <motion.nav
         initial="hidden"
         animate="visible"
@@ -33,13 +52,20 @@ const App = () => {
             <motion.li
               key={item}
               variants={itemVariants}
+              onClick={() =>
+                item === "Mac" || item === "iPhone"
+                  ? setSelected(item)
+                  : null
+              }
               whileHover={{
                 y: -3,
                 scale: 1.1,
                 color: "#ffffff",
                 textShadow: "0px 0px 8px #ffffff",
               }}
-              className="cursor-pointer text-gray-400"
+              className={`cursor-pointer ${
+                selected === item ? "text-white" : "text-gray-400"
+              }`}
             >
               {item}
             </motion.li>
@@ -47,42 +73,55 @@ const App = () => {
         </motion.ul>
       </motion.nav>
 
-      <motion.div className="absolute top-1/4 left-12 z-20 max-w-lg">
-        <motion.h1
+      {/* Hero Text (wrap entire block in AnimatePresence) */}
+      <AnimatePresence exitBeforeEnter>
+        <motion.div
+          key={selected + "-text-block"}
+          className="absolute top-1/4 left-12 z-20 max-w-lg"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-6xl font-bold tracking-tight leading-tight"
         >
-          The Future of MacBook Pro
-        </motion.h1>
+          <h1 className="text-6xl font-bold tracking-tight leading-tight">
+            {products[selected].title}
+          </h1>
+          <p className="mt-6 text-gray-400 text-lg">{products[selected].subtitle}</p>
+          <motion.button
+            whileHover={{
+              scale: 1.1,
+              backgroundColor: "#ffffff",
+              color: "#000",
+              boxShadow: "0 0 20px #fff",
+            }}
+            whileTap={{ scale: 0.95 }}
+            className="mt-8 px-8 py-4 border border-gray-500 rounded-lg text-sm font-semibold transition-all"
+          >
+            Explore Now
+          </motion.button>
+        </motion.div>
+      </AnimatePresence>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          className="mt-6 text-gray-400 text-lg"
+      {/* 3D Canvas (fade between products) */}
+      <div className="absolute inset-0 z-10">
+        <motion.div
+          style={{ position: "absolute", inset: 0 }}
+          animate={{ opacity: selected === "Mac" ? 1 : 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          Power, speed, and elegance—redefined. Experience the ultimate laptop
-          experience.
-        </motion.p>
+          <MacCanvas />
+        </motion.div>
 
-        <motion.button
-          whileHover={{
-            scale: 1.1,
-            backgroundColor: "#ffffff",
-            color: "#000",
-            boxShadow: "0 0 20px #fff",
-          }}
-          whileTap={{ scale: 0.95 }}
-          className="mt-8 px-8 py-4 border border-gray-500 rounded-lg text-sm font-semibold transition-all"
+        <motion.div
+          style={{ position: "absolute", inset: 0 }}
+          animate={{ opacity: selected === "iPhone" ? 1 : 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          Explore Now
-        </motion.button>
-      </motion.div>
+          <IPhoneCanvas />
+        </motion.div>
+      </div>
 
-      <MacCanvas />
-
+      {/* Scroll Hint */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
