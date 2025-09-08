@@ -2,8 +2,8 @@ import { Canvas } from "@react-three/fiber";
 import React, { useState } from "react";
 import MacCanvas from "./canvas/MacCanvas";
 import IPhoneCanvas from "./canvas/IPhoneCanvas";
-import AirPodsCanvas from "./canvas/AirPodsCanvas";
 import { motion, AnimatePresence } from "framer-motion";
+import AirPodsCanvas from "./canvas/AirPodsCanvas";
 
 const products = {
   Mac: {
@@ -20,9 +20,9 @@ const products = {
   },
   Pods: {
     canvas: <AirPodsCanvas />,
-    title: "AirPods Pro 2",
+    title: "AirPods Reimagined",
     subtitle:
-      "Immersive sound. Active noise cancellation. Magic like you’ve never heard.",
+      "Immersive sound, seamless connection, and comfort that lasts all day.",
   },
 };
 
@@ -47,7 +47,6 @@ const App = () => {
 
   return (
     <div className="w-screen h-screen bg-black text-white relative overflow-hidden">
-      {/* Navbar */}
       <motion.nav
         initial="hidden"
         animate="visible"
@@ -59,7 +58,11 @@ const App = () => {
             <motion.li
               key={item}
               variants={itemVariants}
-              onClick={() => (products[item] ? setSelected(item) : null)}
+              onClick={() =>
+                item === "Mac" || item === "iPhone" || item === "Pods"
+                  ? setSelected(item)
+                  : null
+              }
               whileHover={{
                 y: -3,
                 scale: 1.1,
@@ -76,8 +79,7 @@ const App = () => {
         </motion.ul>
       </motion.nav>
 
-      {/* Hero Text */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence exitBeforeEnter>
         <motion.div
           key={selected + "-text-block"}
           className="absolute top-1/4 left-12 z-20 max-w-lg"
@@ -87,10 +89,10 @@ const App = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <h1 className="text-6xl font-bold tracking-tight leading-tight">
-            {products[selected]?.title}
+            {products[selected].title}
           </h1>
           <p className="mt-6 text-gray-400 text-lg">
-            {products[selected]?.subtitle}
+            {products[selected].subtitle}
           </p>
           <motion.button
             whileHover={{
@@ -107,13 +109,17 @@ const App = () => {
         </motion.div>
       </AnimatePresence>
 
-      {/* 3D Canvas (fade between products) */}
       <div className="absolute inset-0 z-10">
         {Object.keys(products).map((key) => (
           <motion.div
             key={key}
             style={{ position: "absolute", inset: 0 }}
-            animate={{ opacity: selected === key ? 1 : 0 }}
+            initial={{ opacity: 0, y: 100 }}
+            animate={{
+              opacity: selected === key ? 1 : 0,
+              y: selected === key ? 0 : 100,
+            }}
+            exit={{ opacity: 0, y: 100 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             {products[key].canvas}
@@ -121,11 +127,10 @@ const App = () => {
         ))}
       </div>
 
-      {/* Scroll Hint */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2, repeat: Infinity, duration: 1 }}
+        transition={{ delay: 2, yoyo: Infinity, duration: 1 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-400 flex flex-col items-center space-y-2"
       >
         <div className="animate-bounce w-3 h-3 rounded-full bg-white"></div>
