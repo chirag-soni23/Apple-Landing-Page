@@ -1,10 +1,10 @@
-import { Canvas } from "@react-three/fiber";
 import React, { useState } from "react";
 import MacCanvas from "./canvas/MacCanvas";
 import IPhoneCanvas from "./canvas/IPhoneCanvas";
 import { motion, AnimatePresence } from "framer-motion";
 import AirPodsCanvas from "./canvas/AirPodsCanvas";
 import { GridBackground } from "./background/Background";
+import HeadPhoneCanvas from "./canvas/HeadPhoneCanvas";
 
 const products = {
   Mac: {
@@ -24,6 +24,12 @@ const products = {
     title: "AirPods Reimagined",
     subtitle:
       "Immersive sound, seamless connection, and comfort that lasts all day.",
+  },
+  Headphone: {
+    canvas: <HeadPhoneCanvas />,
+    title: "Feel the Beat with Headphones",
+    subtitle:
+      "Crystal-clear audio, deep bass, and comfort designed for endless listening.",
   },
 };
 
@@ -49,6 +55,8 @@ const App = () => {
   return (
     <div className="w-screen h-screen bg-black text-white relative overflow-hidden">
       <GridBackground />
+
+      {/* Navbar */}
       <motion.nav
         initial="hidden"
         animate="visible"
@@ -60,11 +68,7 @@ const App = () => {
             <motion.li
               key={item}
               variants={itemVariants}
-              onClick={() =>
-                item === "Mac" || item === "iPhone" || item === "Pods"
-                  ? setSelected(item)
-                  : null
-              }
+              onClick={() => setSelected(item)}
               whileHover={{
                 y: -3,
                 scale: 1.1,
@@ -81,7 +85,8 @@ const App = () => {
         </motion.ul>
       </motion.nav>
 
-      <AnimatePresence exitBeforeEnter>
+      {/* Text Block */}
+      <AnimatePresence mode="wait">
         <motion.div
           key={selected + "-text-block"}
           className="absolute top-1/4 left-12 z-20 max-w-lg"
@@ -111,6 +116,7 @@ const App = () => {
         </motion.div>
       </AnimatePresence>
 
+      {/* Canvases */}
       <div className="absolute inset-0 z-10">
         {Object.keys(products).map((key) => (
           <motion.div
@@ -129,10 +135,11 @@ const App = () => {
         ))}
       </div>
 
+      {/* Scroll Hint */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2, yoyo: Infinity, duration: 1 }}
+        transition={{ delay: 2, repeat: Infinity, duration: 1 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-400 flex flex-col items-center space-y-2"
       >
         <div className="animate-bounce w-3 h-3 rounded-full bg-white"></div>
