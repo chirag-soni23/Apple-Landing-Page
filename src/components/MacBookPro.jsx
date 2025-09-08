@@ -22,6 +22,7 @@ const MacBookPro = () => {
     meshes.Ecran_6.rotation.z = THREE.MathUtils.degToRad(
       90 - data.offset * 180
     );
+
   });
 
   return (
