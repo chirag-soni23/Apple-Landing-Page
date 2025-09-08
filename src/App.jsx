@@ -4,6 +4,7 @@ import MacCanvas from "./canvas/MacCanvas";
 import IPhoneCanvas from "./canvas/IPhoneCanvas";
 import { motion, AnimatePresence } from "framer-motion";
 import AirPodsCanvas from "./canvas/AirPodsCanvas";
+import { GridBackground } from "./background/Background";
 
 const products = {
   Mac: {
@@ -47,6 +48,7 @@ const App = () => {
 
   return (
     <div className="w-screen h-screen bg-black text-white relative overflow-hidden">
+      <GridBackground />
       <motion.nav
         initial="hidden"
         animate="visible"
