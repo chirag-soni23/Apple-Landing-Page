@@ -5,7 +5,7 @@ import * as THREE from "three";
 
 const AirPods = () => {
   const model = useGLTF("./air_pods.glb");
-  const groupRef = useRef();
+  const groupref = useRef();
 
   const parts = {};
   model.scene.traverse((e) => {
@@ -18,8 +18,11 @@ const AirPods = () => {
 
   const scrollData = useScroll();
 
-  useFrame(() => {
+  useFrame((state, delta) => {
     const offset = scrollData.offset;
+    groupref.current.rotation.x += delta * 0.05;
+    groupref.current.rotation.y += delta * 0.1;
+    groupref.current.rotation.z += delta * 0.03;
 
     if (parts.top_) {
       if (offset <= 0.3) {
@@ -28,8 +31,7 @@ const AirPods = () => {
           (-Math.PI / 2) * (offset / 0.3),
           0.1
         );
-      }
-      else if (offset >= 0.7) {
+      } else if (offset >= 0.7) {
         parts.top_.rotation.x = THREE.MathUtils.lerp(
           parts.top_.rotation.x,
           ((-Math.PI / 2) * (1 - offset)) / 0.3,
@@ -56,7 +58,7 @@ const AirPods = () => {
   });
 
   return (
-    <group ref={groupRef} position={[0, 0, 0]}>
+    <group ref={groupref} position={[0, 0, 0]}>
       <primitive object={model.scene} />
     </group>
   );
