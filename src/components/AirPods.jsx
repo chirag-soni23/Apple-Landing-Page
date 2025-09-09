@@ -20,9 +20,9 @@ const AirPods = () => {
 
   useFrame((state, delta) => {
     const offset = scrollData.offset;
-    groupref.current.rotation.x += delta * 0.05;
-    groupref.current.rotation.y += delta * 0.1;
-    groupref.current.rotation.z += delta * 0.03;
+    // groupref.current.rotation.x += delta * 0.05;
+    // groupref.current.rotation.y += delta * 0.1;
+    // groupref.current.rotation.z += delta * 0.03;
 
     if (parts.top_) {
       if (offset <= 0.3) {

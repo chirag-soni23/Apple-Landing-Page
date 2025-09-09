@@ -16,9 +16,9 @@ const MacBookPro = () => {
   let data = useScroll();
 
   useFrame((state, delta) => {
-    groupref.current.rotation.x += delta * 0.05;
-    groupref.current.rotation.y += delta * 0.1;
-    groupref.current.rotation.z += delta * 0.03;
+    // groupref.current.rotation.x += delta * 0.05;
+    // groupref.current.rotation.y += delta * 0.1;
+    // groupref.current.rotation.z += delta * 0.03;
     meshes.Ecran_6.rotation.z = THREE.MathUtils.degToRad(
       90 - data.offset * 180
     );
