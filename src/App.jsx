@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import MacCanvas from "./canvas/MacCanvas";
 import IPhoneCanvas from "./canvas/IPhoneCanvas";
-import { motion, AnimatePresence } from "framer-motion";
 import AirPodsCanvas from "./canvas/AirPodsCanvas";
-import { GridBackground } from "./background/Background";
 import HeadPhoneCanvas from "./canvas/HeadPhoneCanvas";
+import { GridBackground } from "./background/Background";
 
 const products = {
   Mac: {
@@ -51,9 +51,61 @@ const itemVariants = {
 
 const App = () => {
   const [selected, setSelected] = useState("Mac");
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [cursorVariant, setCursorVariant] = useState("default");
+
+  const mouseMove = (e) => {
+    setMousePosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", mouseMove);
+    return () => {
+      window.removeEventListener("mousemove", mouseMove);
+    };
+  }, []);
+
+  // Cursor variants
+  const variants = {
+    default: {
+      x: mousePosition.x - 16,
+      y: mousePosition.y - 16,
+      height: 32,
+      width: 32,
+      backgroundColor: "rgba(255,255,255,0.7)",
+      mixBlendMode: "difference",
+    },
+    navHover: {
+      x: mousePosition.x - 40,
+      y: mousePosition.y - 40,
+      height: 80,
+      width: 80,
+      backgroundColor: "rgba(255,255,255,0.9)",
+      mixBlendMode: "difference",
+    },
+    btnHover: {
+      x: mousePosition.x - 40,
+      y: mousePosition.y - 40,
+      height: 80,
+      width: 80,
+      backgroundColor: "rgba(255,255,255,0.9)",
+      mixBlendMode: "difference",
+    },
+  };
 
   return (
-    <div className="w-screen h-screen bg-black text-white relative overflow-hidden">
+    <div className="w-screen h-screen bg-black text-white relative overflow-hidden cursor-none">
+      {/* Custom Cursor */}
+      <motion.div
+        className="fixed top-0 left-0 rounded-full pointer-events-none z-50"
+        variants={variants}
+        animate={cursorVariant}
+        transition={{ type: "spring", stiffness: 500, damping: 28 }}
+      />
+
       <GridBackground />
 
       {/* Navbar */}
@@ -69,6 +121,8 @@ const App = () => {
               key={item}
               variants={itemVariants}
               onClick={() => setSelected(item)}
+              onMouseEnter={() => setCursorVariant("navHover")}
+              onMouseLeave={() => setCursorVariant("default")}
               whileHover={{
                 y: -3,
                 scale: 1.1,
