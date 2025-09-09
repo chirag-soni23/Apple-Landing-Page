@@ -1,13 +1,15 @@
 import { Environment, OrbitControls, ScrollControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import React from "react";
-import IPhone from "../components/iPhone";
+import IPhone from "../components/IPhone";
 
 const IPhoneCanvas = () => {
   return (
     <Canvas
       className="absolute inset-0 z-10"
-      camera={{ fov: 80, position: [3, 2, 6] }}
+      camera={{
+        fov: 70,
+        position: [3, 2, 6],
+      }}
     >
       <directionalLight position={[5, 5, 5]} intensity={1} />
       <OrbitControls enableZoom={false} />
