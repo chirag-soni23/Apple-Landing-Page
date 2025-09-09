@@ -12,7 +12,7 @@ const IPhoneCanvas = () => {
       }}
     >
       <directionalLight position={[5, 5, 5]} intensity={1} />
-      <OrbitControls enableZoom={false} />
+      <OrbitControls autoRotate enableZoom={false} />
       <Environment files="https://dl.polyhaven.org/file/ph-assets/HDRIs/exr/4k/brown_photostudio_02_4k.exr" />
       <ScrollControls pages={2}>
         <group scale={1}>
